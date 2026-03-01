@@ -1,0 +1,9 @@
+{
+  "scenarios": [
+    {
+      "source": "database_failure.log",
+      "expected_severity": "high",
+      "expected_summary": "Database availability issue causing service disruption."
+    }
+  ]
+}
