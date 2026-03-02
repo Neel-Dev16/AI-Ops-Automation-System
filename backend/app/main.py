@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 
+from app.database import Base, engine
+from app import models
 from app.routers.health import router as health_router
 from app.routers.incidents import router as incidents_router
 from app.routers.logs import router as logs_router
@@ -12,9 +14,14 @@ app = FastAPI(
 )
 
 
+@app.on_event("startup")
+def on_startup() -> None:
+    Base.metadata.create_all(bind=engine)
+
+
 app.include_router(health_router)
-app.include_router(logs_router, prefix="/logs", tags=["logs"])
-app.include_router(incidents_router, prefix="/incidents", tags=["incidents"])
+app.include_router(logs_router, prefix="/api/logs", tags=["logs"])
+app.include_router(incidents_router, prefix="/api/incidents", tags=["incidents"])
 
 
 @app.get("/", tags=["root"])

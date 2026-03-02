@@ -1,1 +1,4 @@
-"""Application configuration helpers will live here."""
+import os
+
+
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./aiops.db")
