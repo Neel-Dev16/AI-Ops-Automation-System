@@ -21,6 +21,7 @@ docker-data/
 .env
 .env.local
 .env.*.local
+backend/aiops.db
 
 # OS
 .DS_Store
