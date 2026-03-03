@@ -14,6 +14,20 @@ class IncidentCreate(BaseModel):
     status: str = "open"
 
 
+class LogAnalysisRequest(BaseModel):
+    raw_logs: str
+
+
+class IncidentAnalysisResult(BaseModel):
+    service_name: str
+    severity: str
+    incident_type: str
+    summary: str
+    root_cause: str
+    recommended_actions: str
+    requires_escalation: bool
+
+
 class IncidentResponse(BaseModel):
     id: int
     service_name: str
