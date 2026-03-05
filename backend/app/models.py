@@ -16,5 +16,8 @@ class Incident(Base):
     root_cause = Column(Text, nullable=False)
     recommended_actions = Column(Text, nullable=False)
     requires_escalation = Column(Boolean, nullable=False, default=False)
+    escalation_message = Column(Text, nullable=True)
+    automation_action = Column(String, nullable=True)
+    priority_score = Column(Integer, nullable=True)
     status = Column(String, nullable=False, default="open")
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)

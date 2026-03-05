@@ -11,6 +11,9 @@ class IncidentCreate(BaseModel):
     root_cause: str
     recommended_actions: str
     requires_escalation: bool
+    escalation_message: str | None = None
+    automation_action: str | None = None
+    priority_score: int | None = None
     status: str = "open"
 
 
@@ -26,6 +29,9 @@ class IncidentAnalysisResult(BaseModel):
     root_cause: str
     recommended_actions: str
     requires_escalation: bool
+    escalation_message: str | None = None
+    automation_action: str | None = None
+    priority_score: int | None = None
 
 
 class IncidentResponse(BaseModel):
@@ -37,6 +43,9 @@ class IncidentResponse(BaseModel):
     root_cause: str
     recommended_actions: str
     requires_escalation: bool
+    escalation_message: str | None = None
+    automation_action: str | None = None
+    priority_score: int | None = None
     status: str
     created_at: datetime
 
