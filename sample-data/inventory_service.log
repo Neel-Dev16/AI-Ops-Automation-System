@@ -1,1 +1,10 @@
-2026-04-28T10:02:00Z ERROR inventory-service Stock reservation timed out for order 4821.
+2026-04-28T10:02:00Z INFO inventory-service Reservation request received order_id=4821 sku=SKU-441 qty=3
+2026-04-28T10:02:01Z INFO inventory-service Loading stock snapshot warehouse=us-central-2
+2026-04-28T10:02:02Z WARN inventory-service Cache refresh slower than expected current_ms=640
+2026-04-28T10:02:03Z INFO inventory-service Starting allocation worker batch_id=alloc-112
+2026-04-28T10:02:04Z WARN inventory-service Memory usage above soft limit rss_mb=1536
+2026-04-28T10:02:05Z ERROR inventory-service Allocation worker encountered out of memory condition batch_id=alloc-112
+2026-04-28T10:02:05Z CRITICAL inventory-service OOM killer terminated reservation subprocess pid=44129
+2026-04-28T10:02:06Z ERROR inventory-service Failed to reserve stock for order_id=4821 reason=memory_exhaustion
+2026-04-28T10:02:07Z WARN inventory-service Recovery attempt started by supervisor restart_count=1
+2026-04-28T10:02:09Z INFO inventory-service Instance marked degraded until memory pressure subsides

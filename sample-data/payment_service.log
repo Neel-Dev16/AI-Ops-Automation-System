@@ -1,1 +1,10 @@
-2026-04-28T10:00:00Z INFO payment-service Processed payment request successfully.
+2026-04-28T10:00:00Z INFO payment-service Request received for checkout session sess-10021 user_id=8491
+2026-04-28T10:00:01Z INFO payment-service Validated cart totals for order_id=50192 amount=184.22
+2026-04-28T10:00:02Z INFO payment-service Attempting database transaction for payment_id=pay-77421
+2026-04-28T10:00:03Z WARN payment-service Database latency increased above threshold current_ms=820
+2026-04-28T10:00:04Z ERROR payment-service Query timeout while locking invoice row order_id=50192 timeout_ms=3000
+2026-04-28T10:00:05Z ERROR payment-service Database timeout after 30s while finalizing charge payment_id=pay-77421
+2026-04-28T10:00:05Z ERROR payment-service Connection pool exhausted active_connections=40 waiting_requests=12
+2026-04-28T10:00:06Z WARN payment-service Retrying transaction attempt=2 payment_id=pay-77421
+2026-04-28T10:00:09Z ERROR payment-service Retry failed due to upstream database timeout payment_id=pay-77421
+2026-04-28T10:00:10Z INFO payment-service Marked payment_id=pay-77421 for manual review

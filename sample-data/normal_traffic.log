@@ -1,1 +1,10 @@
-2026-04-28T10:04:00Z INFO gateway-service Normal traffic pattern observed across all endpoints.
+2026-04-28T10:04:00Z INFO gateway-service Request received method=GET path=/api/catalog request_id=req-1001
+2026-04-28T10:04:01Z INFO gateway-service Response sent status=200 latency_ms=42 request_id=req-1001
+2026-04-28T10:04:02Z INFO payment-service Processed payment authorization successfully payment_id=pay-8801
+2026-04-28T10:04:03Z INFO auth-service JWT issued successfully user_id=998 session_id=sess-2001
+2026-04-28T10:04:04Z INFO inventory-service Reserved stock order_id=4910 sku=SKU-220 qty=1
+2026-04-28T10:04:05Z INFO gateway-service Request received method=POST path=/api/orders request_id=req-1002
+2026-04-28T10:04:06Z INFO gateway-service Response sent status=201 latency_ms=88 request_id=req-1002
+2026-04-28T10:04:07Z INFO recommendation-service Cache hit rate stable value=0.97
+2026-04-28T10:04:08Z WARN gateway-service General warning: transient retry to analytics pipeline succeeded
+2026-04-28T10:04:09Z INFO gateway-service Normal traffic pattern observed across all endpoints.

@@ -1,1 +1,9 @@
-2026-04-28T10:01:00Z WARN auth-service Multiple failed login attempts detected for user session.
+2026-04-28T10:01:00Z INFO auth-service Login request received email=user@example.com ip=10.10.4.19
+2026-04-28T10:01:01Z INFO auth-service Password verification passed user_id=214
+2026-04-28T10:01:02Z WARN auth-service JWT signing key rotation cache miss detected
+2026-04-28T10:01:03Z ERROR auth-service JWT validation failed reason=signature_mismatch user_id=214
+2026-04-28T10:01:04Z WARN auth-service Unauthorized response returned path=/api/profile status=401
+2026-04-28T10:01:05Z ERROR auth-service Authentication middleware rejected access token request_id=req-9122
+2026-04-28T10:01:06Z WARN auth-service Multiple failed login attempts detected for account=user@example.com
+2026-04-28T10:01:07Z INFO auth-service Fallback session revocation check completed user_id=214
+2026-04-28T10:01:08Z WARN auth-service General warning: token issuer mismatch observed for legacy mobile client

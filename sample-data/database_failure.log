@@ -1,1 +1,10 @@
-2026-04-28T10:03:00Z CRITICAL database-service Connection pool exhausted. Database unavailable.
+2026-04-28T10:03:00Z INFO database-service Health probe started cluster=orders-primary
+2026-04-28T10:03:01Z WARN database-service Replica lag exceeded threshold lag_seconds=14
+2026-04-28T10:03:02Z INFO database-service Connection usage nearing limit active_connections=187
+2026-04-28T10:03:03Z WARN database-service Query queue depth rising queued_requests=27
+2026-04-28T10:03:04Z ERROR database-service Connection pool exhausted max_connections=200
+2026-04-28T10:03:05Z ERROR database-service Transaction begin failed reason=database_timeout
+2026-04-28T10:03:06Z CRITICAL database-service Database unavailable for write traffic failover_state=pending
+2026-04-28T10:03:07Z ERROR database-service Client checkout-service disconnected after timeout_ms=30000
+2026-04-28T10:03:08Z WARN database-service General warning: failover candidate health unstable
+2026-04-28T10:03:10Z INFO database-service Incident record emitted for infrastructure team
