@@ -34,6 +34,10 @@ class IncidentAnalysisResult(BaseModel):
     priority_score: int | None = None
 
 
+class IncidentStatusUpdate(BaseModel):
+    status: str
+
+
 class IncidentResponse(BaseModel):
     id: int
     service_name: str
