@@ -19,18 +19,9 @@ def list_logs() -> dict[str, str]:
 def analyze_logs(payload: LogAnalysisRequest, db: Session = Depends(get_db)) -> Incident:
     analysis = analyze_logs_with_llm(payload.raw_logs)
     automation_metadata = apply_automation_rules(analysis)
-
     incident_data = IncidentCreate(
-        service_name=analysis.service_name,
-        severity=analysis.severity,
-        incident_type=analysis.incident_type,
-        summary=analysis.summary,
-        root_cause=analysis.root_cause,
-        recommended_actions=analysis.recommended_actions,
-        requires_escalation=analysis.requires_escalation,
-        escalation_message=automation_metadata["escalation_message"],
-        automation_action=automation_metadata["automation_action"],
-        priority_score=automation_metadata["priority_score"],
+        **analysis.model_dump(),
+        **automation_metadata,
     )
 
     incident = Incident(**incident_data.model_dump())

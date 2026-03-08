@@ -10,6 +10,13 @@ router = APIRouter()
 VALID_INCIDENT_STATUSES = {"open", "investigating", "resolved", "ignored"}
 
 
+def get_incident_or_404(incident_id: int, db: Session) -> Incident:
+    incident = db.query(Incident).filter(Incident.id == incident_id).first()
+    if incident is None:
+        raise HTTPException(status_code=404, detail="Incident not found")
+    return incident
+
+
 @router.get("/", response_model=list[IncidentResponse])
 def list_incidents(db: Session = Depends(get_db)) -> list[Incident]:
     return db.query(Incident).order_by(Incident.created_at.desc()).all()
@@ -36,10 +43,7 @@ def create_test_incident(db: Session = Depends(get_db)) -> Incident:
 
 @router.get("/{incident_id}", response_model=IncidentResponse)
 def get_incident(incident_id: int, db: Session = Depends(get_db)) -> Incident:
-    incident = db.query(Incident).filter(Incident.id == incident_id).first()
-    if incident is None:
-        raise HTTPException(status_code=404, detail="Incident not found")
-    return incident
+    return get_incident_or_404(incident_id, db)
 
 
 @router.patch("/{incident_id}/status", response_model=IncidentResponse)
@@ -54,10 +58,7 @@ def update_incident_status(
             detail="Invalid status. Valid statuses are: open, investigating, resolved, ignored",
         )
 
-    incident = db.query(Incident).filter(Incident.id == incident_id).first()
-    if incident is None:
-        raise HTTPException(status_code=404, detail="Incident not found")
-
+    incident = get_incident_or_404(incident_id, db)
     incident.status = payload.status
     db.commit()
     db.refresh(incident)

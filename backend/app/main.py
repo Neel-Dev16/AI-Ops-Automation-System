@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
-from app.database import Base, engine
 from app import models
+from app.database import Base, engine
 from app.routers.health import router as health_router
 from app.routers.incidents import router as incidents_router
 from app.routers.logs import router as logs_router
@@ -16,6 +16,7 @@ app = FastAPI(
 
 @app.on_event("startup")
 def on_startup() -> None:
+    # Importing models ensures SQLAlchemy knows about the Incident table.
     Base.metadata.create_all(bind=engine)
 
 
