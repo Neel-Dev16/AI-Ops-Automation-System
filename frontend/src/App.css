@@ -72,3 +72,72 @@ body {
   padding-left: 18px;
   color: #4d6480;
 }
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.incident-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  font-size: 0.95rem;
+}
+
+.incident-table th,
+.incident-table td {
+  padding: 12px 10px;
+  text-align: left;
+  border-bottom: 1px solid #e6edf5;
+  vertical-align: top;
+}
+
+.incident-table th {
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: #5a6f87;
+}
+
+.table-message {
+  margin: 16px 0 0;
+  color: #4d6480;
+}
+
+.table-error {
+  color: #a12f2f;
+}
+
+.severity-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.severity-critical {
+  background: #ffe0e0;
+  color: #8c1c13;
+}
+
+.severity-high {
+  background: #ffeacc;
+  color: #9c5a00;
+}
+
+.severity-medium {
+  background: #fff5cc;
+  color: #7a6700;
+}
+
+.severity-low {
+  background: #dff6e6;
+  color: #1c6b3c;
+}
+
+.severity-unknown {
+  background: #e7edf4;
+  color: #415a77;
+}
