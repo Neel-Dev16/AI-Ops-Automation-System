@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { getIncidents } from "../api/incidents";
+import { getIncidents, updateIncidentStatus } from "../api/incidents";
 
 function formatDate(value) {
   if (!value) {
@@ -19,25 +19,40 @@ export default function IncidentTable() {
   const [incidents, setIncidents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [updatingId, setUpdatingId] = useState(null);
+  const [updateError, setUpdateError] = useState("");
+
+  async function loadIncidents() {
+    try {
+      setLoading(true);
+      setError("");
+      const data = await getIncidents();
+      setIncidents(data);
+    } catch (requestError) {
+      setError(
+        "Could not load incidents. Make sure the backend server is running."
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    async function loadIncidents() {
-      try {
-        setLoading(true);
-        setError("");
-        const data = await getIncidents();
-        setIncidents(data);
-      } catch (requestError) {
-        setError(
-          "Could not load incidents. Make sure the backend server is running."
-        );
-      } finally {
-        setLoading(false);
-      }
-    }
-
     loadIncidents();
   }, []);
+
+  async function handleStatusUpdate(incidentId, status) {
+    try {
+      setUpdatingId(incidentId);
+      setUpdateError("");
+      await updateIncidentStatus(incidentId, status);
+      await loadIncidents();
+    } catch (requestError) {
+      setUpdateError("Could not update incident status. Please try again.");
+    } finally {
+      setUpdatingId(null);
+    }
+  }
 
   if (loading) {
     return <p className="table-message">Loading incidents...</p>;
@@ -53,6 +68,10 @@ export default function IncidentTable() {
 
   return (
     <div className="table-wrapper">
+      {updateError ? (
+        <p className="table-message table-error">{updateError}</p>
+      ) : null}
+
       <table className="incident-table">
         <thead>
           <tr>
@@ -64,6 +83,7 @@ export default function IncidentTable() {
             <th>Priority Score</th>
             <th>Escalation Required</th>
             <th>Created At</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -81,6 +101,36 @@ export default function IncidentTable() {
               <td>{incident.priority_score ?? "N/A"}</td>
               <td>{incident.requires_escalation ? "Yes" : "No"}</td>
               <td>{formatDate(incident.created_at)}</td>
+              <td>
+                <div className="status-actions">
+                  <button
+                    type="button"
+                    className="status-button"
+                    onClick={() =>
+                      handleStatusUpdate(incident.id, "investigating")
+                    }
+                    disabled={updatingId === incident.id}
+                  >
+                    {updatingId === incident.id ? "Updating..." : "Investigating"}
+                  </button>
+                  <button
+                    type="button"
+                    className="status-button"
+                    onClick={() => handleStatusUpdate(incident.id, "resolved")}
+                    disabled={updatingId === incident.id}
+                  >
+                    Resolved
+                  </button>
+                  <button
+                    type="button"
+                    className="status-button"
+                    onClick={() => handleStatusUpdate(incident.id, "ignored")}
+                    disabled={updatingId === incident.id}
+                  >
+                    Ignored
+                  </button>
+                </div>
+              </td>
             </tr>
           ))}
         </tbody>
