@@ -1,6 +1,7 @@
 import React from "react";
 import "./App.css";
 import IncidentTable from "./components/IncidentTable";
+import LogAnalyzer from "./components/LogAnalyzer";
 
 export default function App() {
   return (
@@ -25,14 +26,10 @@ export default function App() {
         <article className="panel">
           <h2>Analyze Logs</h2>
           <p>
-            This section will allow users to paste raw logs and trigger backend
-            analysis.
+            Paste application logs and send them to the backend for incident
+            analysis and automation metadata generation.
           </p>
-          <ul>
-            <li>Raw log input</li>
-            <li>Mock LLM analysis results</li>
-            <li>Generated incident details</li>
-          </ul>
+          <LogAnalyzer />
         </article>
       </section>
     </main>
