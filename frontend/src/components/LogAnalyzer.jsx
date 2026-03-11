@@ -6,7 +6,7 @@ const SAMPLE_LOG = `ERROR payment-service database timeout after 30s.
 Connection pool exhausted.
 Retry attempts failed.`;
 
-export default function LogAnalyzer() {
+export default function LogAnalyzer({ onAnalysisComplete }) {
   const [rawLogs, setRawLogs] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -26,6 +26,7 @@ export default function LogAnalyzer() {
       setError("");
       const incident = await analyzeLogs(rawLogs);
       setResult(incident);
+      onAnalysisComplete?.();
     } catch (requestError) {
       setError(
         "Analysis failed. Make sure the backend server is running and accessible."

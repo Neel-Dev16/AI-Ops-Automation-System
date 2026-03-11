@@ -15,7 +15,7 @@ function severityClassName(severity) {
   return `severity-badge severity-${severity?.toLowerCase() || "unknown"}`;
 }
 
-export default function IncidentTable() {
+export default function IncidentTable({ refreshKey }) {
   const [incidents, setIncidents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -39,7 +39,7 @@ export default function IncidentTable() {
 
   useEffect(() => {
     loadIncidents();
-  }, []);
+  }, [refreshKey]);
 
   async function handleStatusUpdate(incidentId, status) {
     try {
