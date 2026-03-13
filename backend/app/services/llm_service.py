@@ -1,7 +1,12 @@
+import json
+
+from openai import OpenAI
+
+from app.config import LLM_MODE, OPENAI_API_KEY, OPENAI_MODEL
 from app.schemas import IncidentAnalysisResult
 
 
-def analyze_logs_with_llm(raw_logs: str) -> IncidentAnalysisResult:
+def analyze_logs_with_mock(raw_logs: str) -> IncidentAnalysisResult:
     normalized_logs = raw_logs.lower()
 
     if any(keyword in normalized_logs for keyword in ["timeout", "connection pool", "database"]):
@@ -46,3 +51,83 @@ def analyze_logs_with_llm(raw_logs: str) -> IncidentAnalysisResult:
         recommended_actions="Review the logs manually and gather more context before taking action.",
         requires_escalation=False,
     )
+
+
+def analyze_logs_with_openai(raw_logs: str) -> IncidentAnalysisResult:
+    if not OPENAI_API_KEY:
+        raise ValueError("OPENAI_API_KEY is missing. Set it before using LLM_MODE=openai.")
+
+    client = OpenAI(api_key=OPENAI_API_KEY)
+
+    response = client.responses.create(
+        model=OPENAI_MODEL,
+        input=[
+            {
+                "role": "system",
+                "content": (
+                    "You are an AIOps incident analyst. Analyze raw application logs and "
+                    "return only valid JSON that matches the requested schema."
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    "Analyze these logs and return JSON only.\n\n"
+                    f"Raw logs:\n{raw_logs}"
+                ),
+            },
+        ],
+        text={
+            "format": {
+                "type": "json_schema",
+                "name": "incident_analysis_result",
+                "strict": True,
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "service_name": {"type": "string"},
+                        "severity": {
+                            "type": "string",
+                            "enum": ["critical", "high", "medium", "low"],
+                        },
+                        "incident_type": {"type": "string"},
+                        "summary": {"type": "string"},
+                        "root_cause": {"type": "string"},
+                        "recommended_actions": {"type": "string"},
+                        "requires_escalation": {"type": "boolean"},
+                    },
+                    "required": [
+                        "service_name",
+                        "severity",
+                        "incident_type",
+                        "summary",
+                        "root_cause",
+                        "recommended_actions",
+                        "requires_escalation",
+                    ],
+                    "additionalProperties": False,
+                },
+            }
+        },
+    )
+
+    output_text = getattr(response, "output_text", "")
+    if not output_text:
+        raise ValueError("OpenAI returned an empty response.")
+
+    try:
+        parsed_json = json.loads(output_text)
+    except json.JSONDecodeError as exc:
+        raise ValueError("OpenAI returned invalid JSON.") from exc
+
+    try:
+        return IncidentAnalysisResult.model_validate(parsed_json)
+    except Exception as exc:
+        raise ValueError("OpenAI returned JSON that does not match IncidentAnalysisResult.") from exc
+
+
+def analyze_logs_with_llm(raw_logs: str) -> IncidentAnalysisResult:
+    if LLM_MODE == "openai":
+        return analyze_logs_with_openai(raw_logs)
+
+    return analyze_logs_with_mock(raw_logs)
