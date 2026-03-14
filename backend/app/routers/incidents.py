@@ -28,6 +28,7 @@ def create_test_incident(db: Session = Depends(get_db)) -> Incident:
         service_name="payment-service",
         severity="high",
         incident_type="database_timeout",
+        raw_logs="ERROR payment-service database timeout after 30s. Connection pool exhausted.",
         summary="Database connection timeout detected",
         root_cause="Connection pool exhaustion",
         recommended_actions="Check DB pool, inspect slow queries",

@@ -7,6 +7,7 @@ class IncidentCreate(BaseModel):
     service_name: str
     severity: str
     incident_type: str
+    raw_logs: str | None = None
     summary: str
     root_cause: str
     recommended_actions: str
@@ -43,6 +44,7 @@ class IncidentResponse(BaseModel):
     service_name: str
     severity: str
     incident_type: str
+    raw_logs: str | None = None
     summary: str
     root_cause: str
     recommended_actions: str

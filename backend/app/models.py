@@ -12,6 +12,7 @@ class Incident(Base):
     service_name = Column(String, nullable=False)
     severity = Column(String, nullable=False)
     incident_type = Column(String, nullable=False)
+    raw_logs = Column(Text, nullable=True)
     summary = Column(String, nullable=False)
     root_cause = Column(Text, nullable=False)
     recommended_actions = Column(Text, nullable=False)

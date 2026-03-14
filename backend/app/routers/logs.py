@@ -26,6 +26,7 @@ def analyze_logs(payload: LogAnalysisRequest, db: Session = Depends(get_db)) -> 
 
     incident_data = IncidentCreate(
         **analysis_data,
+        raw_logs=payload.raw_logs,
         **automation_metadata,
     )
 
