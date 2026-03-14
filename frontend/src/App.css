@@ -19,33 +19,93 @@ body {
   min-height: 100vh;
 }
 
-.app-shell {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 48px 20px 64px;
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  min-height: 100vh;
 }
 
-.hero {
-  margin-bottom: 32px;
+.sidebar {
+  padding: 32px 24px;
+  border-right: 1px solid #d9e4f0;
+  background: linear-gradient(180deg, #ffffff 0%, #f3f8ff 100%);
 }
 
-.hero h1 {
-  margin: 0 0 12px;
-  font-size: 2.5rem;
+.sidebar-brand {
+  margin-bottom: 28px;
+}
+
+.sidebar-kicker {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #1d4ed8;
+}
+
+.sidebar-brand h1 {
+  margin: 0 0 10px;
+  font-size: 1.9rem;
   line-height: 1.1;
 }
 
-.hero p {
+.sidebar-subtitle {
   margin: 0;
-  max-width: 720px;
-  font-size: 1.05rem;
-  color: #415a77;
+  color: #4d6480;
+  line-height: 1.5;
 }
 
-.panel-grid {
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nav-item {
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: transparent;
+  color: #23415f;
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.nav-item:hover {
+  background: #edf4fd;
+}
+
+.nav-item-active {
+  border-color: #c4d8f1;
+  background: #e8f0fd;
+  color: #163d8f;
+}
+
+.main-content {
+  padding: 40px 28px 56px;
+}
+
+.content-header {
+  margin-bottom: 24px;
+}
+
+.content-header h2 {
+  margin: 0 0 10px;
+  font-size: 2rem;
+}
+
+.content-header p {
+  margin: 0;
+  color: #4d6480;
+}
+
+.content-stack {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
+  gap: 18px;
 }
 
 .panel {
@@ -65,6 +125,16 @@ body {
 .panel p {
   margin: 0 0 12px;
   color: #4d6480;
+}
+
+.panel h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 1.05rem;
+}
+
+.panel-muted {
+  background: #f8fbff;
 }
 
 .panel ul {
@@ -262,4 +332,28 @@ body {
 .result-grid dd {
   margin: 0;
   color: #23364d;
+}
+
+@media (max-width: 900px) {
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    border-right: none;
+    border-bottom: 1px solid #d9e4f0;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .nav-item {
+    width: auto;
+  }
+
+  .main-content {
+    padding: 28px 20px 40px;
+  }
 }
