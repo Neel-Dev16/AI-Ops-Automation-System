@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./App.css";
 import IncidentTable from "./components/IncidentTable";
 import LogAnalyzer from "./components/LogAnalyzer";
+import OverviewDashboard from "./components/OverviewDashboard";
 
 const navItems = [
   { id: "overview", label: "Overview" },
@@ -20,26 +21,7 @@ export default function App() {
 
   function renderPageContent() {
     if (activePage === "overview") {
-      return (
-        <section className="content-stack">
-          <article className="panel">
-            <h2>Overview</h2>
-            <p>
-              Monitor the AI Ops workflow from one place. Use the sidebar to
-              analyze incoming logs, review saved incidents, and validate the
-              mock pipeline behavior.
-            </p>
-          </article>
-
-          <article className="panel panel-muted">
-            <h3>Platform Snapshot</h3>
-            <p>
-              The backend stores incidents in SQLite, applies automation rules,
-              and exposes APIs for analysis and status updates.
-            </p>
-          </article>
-        </section>
-      );
+      return <OverviewDashboard refreshKey={incidentRefreshKey} />;
     }
 
     if (activePage === "analyze") {
