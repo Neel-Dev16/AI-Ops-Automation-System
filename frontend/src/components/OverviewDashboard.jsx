@@ -136,23 +136,34 @@ export default function OverviewDashboard({ refreshKey }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    async function loadIncidents() {
-      try {
+  async function loadIncidents(showLoadingState = true) {
+    try {
+      if (showLoadingState) {
         setLoading(true);
-        setError("");
-        const data = await getIncidents();
-        setIncidents(data);
-      } catch (requestError) {
-        setError(
-          "Could not load overview analytics. Make sure the backend server is running."
-        );
-      } finally {
+      }
+
+      setError("");
+      const data = await getIncidents();
+      setIncidents(data);
+    } catch (requestError) {
+      setError(
+        "Could not load overview analytics. Make sure the backend server is running."
+      );
+    } finally {
+      if (showLoadingState) {
         setLoading(false);
       }
     }
+  }
 
+  useEffect(() => {
     loadIncidents();
+
+    const intervalId = window.setInterval(() => {
+      loadIncidents(false);
+    }, 5000);
+
+    return () => window.clearInterval(intervalId);
   }, [refreshKey]);
 
   if (loading) {

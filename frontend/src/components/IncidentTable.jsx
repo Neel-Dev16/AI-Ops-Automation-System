@@ -23,9 +23,12 @@ export default function IncidentTable({ refreshKey }) {
   const [updatingId, setUpdatingId] = useState(null);
   const [updateError, setUpdateError] = useState("");
 
-  async function loadIncidents() {
+  async function loadIncidents(showLoadingState = true) {
     try {
-      setLoading(true);
+      if (showLoadingState) {
+        setLoading(true);
+      }
+
       setError("");
       const data = await getIncidents();
       setIncidents(data);
@@ -43,12 +46,20 @@ export default function IncidentTable({ refreshKey }) {
         "Could not load incidents. Make sure the backend server is running."
       );
     } finally {
-      setLoading(false);
+      if (showLoadingState) {
+        setLoading(false);
+      }
     }
   }
 
   useEffect(() => {
     loadIncidents();
+
+    const intervalId = window.setInterval(() => {
+      loadIncidents(false);
+    }, 5000);
+
+    return () => window.clearInterval(intervalId);
   }, [refreshKey]);
 
   async function handleStatusUpdate(incidentId, status) {
