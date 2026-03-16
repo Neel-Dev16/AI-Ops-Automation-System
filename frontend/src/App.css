@@ -294,11 +294,30 @@ body {
   overflow-x: auto;
 }
 
+.incident-history-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(280px, 0.9fr);
+  gap: 18px;
+  align-items: start;
+}
+
 .incident-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 12px;
   font-size: 0.95rem;
+}
+
+.incident-row {
+  cursor: pointer;
+}
+
+.incident-row:hover {
+  background: #f7fbff;
+}
+
+.incident-row-selected {
+  background: #eef5ff;
 }
 
 .incident-table th,
@@ -323,6 +342,85 @@ body {
 
 .table-error {
   color: #a12f2f;
+}
+
+.incident-detail-panel {
+  padding: 20px;
+  border: 1px solid #d9e4f0;
+  border-radius: 16px;
+  background: #fbfdff;
+  box-shadow: 0 12px 30px rgba(20, 33, 61, 0.06);
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.detail-header h3,
+.detail-placeholder h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+  margin: 0 0 20px;
+}
+
+.detail-grid div {
+  min-width: 0;
+}
+
+.detail-grid dt {
+  margin-bottom: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #5a6f87;
+}
+
+.detail-grid dd {
+  margin: 0;
+  color: #23364d;
+  overflow-wrap: anywhere;
+}
+
+.detail-section {
+  margin-top: 16px;
+}
+
+.detail-section h4 {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+}
+
+.detail-section p {
+  margin: 0;
+  color: #4d6480;
+  overflow-wrap: anywhere;
+}
+
+.raw-logs-block {
+  margin: 0;
+  padding: 14px;
+  border-radius: 12px;
+  background: #132033;
+  color: #eef5ff;
+  font: 0.85rem/1.5 "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+    monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.detail-placeholder p {
+  margin: 10px 0 0;
+  color: #4d6480;
 }
 
 .status-actions {
@@ -505,6 +603,14 @@ body {
   }
 
   .overview-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .incident-history-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-grid {
     grid-template-columns: 1fr;
   }
 
