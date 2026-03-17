@@ -131,6 +131,18 @@ function severityClassName(severity) {
   return `severity-badge severity-${severity?.toLowerCase() || "unknown"}`;
 }
 
+function EmptyState({ title, description, compact = false }) {
+  return (
+    <div className={compact ? "empty-state empty-state-compact" : "empty-state"}>
+      <div className="empty-state-icon" aria-hidden="true">
+        *
+      </div>
+      <h3>{title}</h3>
+      <p>{description}</p>
+    </div>
+  );
+}
+
 export default function OverviewDashboard({ refreshKey }) {
   const [incidents, setIncidents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -167,15 +179,46 @@ export default function OverviewDashboard({ refreshKey }) {
   }, [refreshKey]);
 
   if (loading) {
-    return <p className="table-message">Loading overview metrics...</p>;
+    return (
+      <section className="content-stack">
+        <article className="panel">
+          <div className="section-heading">
+            <h2>Overview</h2>
+            <p>Loading current incident analytics from the backend.</p>
+          </div>
+          <div className="kpi-grid">
+            {kpiCards.map((card) => (
+              <div key={card.key} className="kpi-card loading-card">
+                <span className="kpi-label">Loading</span>
+                <strong className="kpi-value">...</strong>
+              </div>
+            ))}
+          </div>
+        </article>
+      </section>
+    );
   }
 
   if (error) {
-    return <p className="table-message table-error">{error}</p>;
+    return (
+      <article className="panel">
+        <EmptyState
+          title="Overview unavailable"
+          description={error}
+        />
+      </article>
+    );
   }
 
   if (incidents.length === 0) {
-    return <p className="table-message">No incidents available yet.</p>;
+    return (
+      <article className="panel">
+        <EmptyState
+          title="No incidents yet"
+          description="Run a log analysis or create a test incident to start populating the dashboard."
+        />
+      </article>
+    );
   }
 
   const kpis = calculateKpis(incidents);
@@ -186,11 +229,13 @@ export default function OverviewDashboard({ refreshKey }) {
   return (
     <section className="content-stack">
       <article className="panel">
-        <h2>Overview</h2>
-        <p>
-          Monitor current incident volume, severity distribution, and
-          escalation needs across the AI Ops workflow.
-        </p>
+        <div className="section-heading">
+          <h2>Overview</h2>
+          <p>
+            Monitor current incident volume, severity distribution, and
+            escalation needs across the AI Ops workflow.
+          </p>
+        </div>
 
         <div className="kpi-grid">
           {kpiCards.map((card, index) => (
@@ -213,62 +258,80 @@ export default function OverviewDashboard({ refreshKey }) {
           <h3>Severity Distribution</h3>
           <p>Current incident mix by severity level.</p>
 
-          <div className="chart-container">
-            <ResponsiveContainer width="100%" height={280}>
-              <PieChart>
-                <Pie
-                  data={severityData}
-                  dataKey="value"
-                  nameKey="name"
-                  innerRadius={65}
-                  outerRadius={100}
-                  paddingAngle={4}
-                  isAnimationActive
-                >
-                  {severityData.map((entry) => (
-                    <Cell key={entry.name} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-
-          <div className="chart-legend">
-            {severityData.map((entry) => (
-              <div key={entry.name} className="legend-item">
-                <span
-                  className="legend-swatch"
-                  style={{ backgroundColor: entry.color }}
-                />
-                <span className="legend-label">
-                  {entry.name}: {entry.value}
-                </span>
+          {severityData.length > 0 ? (
+            <>
+              <div className="chart-container">
+                <ResponsiveContainer width="100%" height={280}>
+                  <PieChart>
+                    <Pie
+                      data={severityData}
+                      dataKey="value"
+                      nameKey="name"
+                      innerRadius={65}
+                      outerRadius={100}
+                      paddingAngle={4}
+                      isAnimationActive
+                    >
+                      {severityData.map((entry) => (
+                        <Cell key={entry.name} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
               </div>
-            ))}
-          </div>
+
+              <div className="chart-legend">
+                {severityData.map((entry) => (
+                  <div key={entry.name} className="legend-item">
+                    <span
+                      className="legend-swatch"
+                      style={{ backgroundColor: entry.color }}
+                    />
+                    <span className="legend-label">
+                      {entry.name}: {entry.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <EmptyState
+              compact
+              title="No severity chart data"
+              description="Severity distribution will appear when incidents include classified severity values."
+            />
+          )}
         </article>
 
         <article className="panel">
           <h3>Incident Trend</h3>
           <p>Recent incident creation trend based on stored timestamps.</p>
 
-          <div className="chart-container">
-            <ResponsiveContainer width="100%" height={280}>
-              <LineChart data={trendData}>
-                <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="incidents"
-                  stroke="#1d4ed8"
-                  strokeWidth={3}
-                  dot={{ r: 4, fill: "#1d4ed8" }}
-                  activeDot={{ r: 6 }}
-                  isAnimationActive
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+          {trendData.length > 0 ? (
+            <div className="chart-container">
+              <ResponsiveContainer width="100%" height={280}>
+                <LineChart data={trendData}>
+                  <Tooltip />
+                  <Line
+                    type="monotone"
+                    dataKey="incidents"
+                    stroke="#1d4ed8"
+                    strokeWidth={3}
+                    dot={{ r: 4, fill: "#1d4ed8" }}
+                    activeDot={{ r: 6 }}
+                    isAnimationActive
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <EmptyState
+              compact
+              title="No trend data"
+              description="Incident trend data will appear after incidents with valid timestamps are available."
+            />
+          )}
         </article>
       </section>
 

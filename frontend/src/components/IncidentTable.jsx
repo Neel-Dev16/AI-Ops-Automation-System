@@ -15,6 +15,10 @@ function severityClassName(severity) {
   return `severity-badge severity-${severity?.toLowerCase() || "unknown"}`;
 }
 
+function statusClassName(status) {
+  return `status-badge status-${status?.toLowerCase() || "unknown"}`;
+}
+
 export default function IncidentTable({ refreshKey }) {
   const [incidents, setIncidents] = useState([]);
   const [selectedIncident, setSelectedIncident] = useState(null);
@@ -86,20 +90,63 @@ export default function IncidentTable({ refreshKey }) {
   }
 
   if (loading) {
-    return <p className="table-message">Loading incidents...</p>;
+    return (
+      <div className="incident-history-layout">
+        <div className="table-wrapper table-card">
+          <div className="loading-block">
+            <div className="loading-bar loading-bar-wide" />
+            <div className="loading-bar" />
+            <div className="loading-bar" />
+            <div className="loading-bar loading-bar-short" />
+          </div>
+        </div>
+
+        <aside className="incident-detail-panel">
+          <div className="loading-block">
+            <div className="loading-bar loading-bar-medium" />
+            <div className="loading-bar" />
+            <div className="loading-bar loading-bar-wide" />
+            <div className="loading-bar loading-bar-short" />
+          </div>
+        </aside>
+      </div>
+    );
   }
 
   if (error) {
-    return <p className="table-message table-error">{error}</p>;
+    return (
+      <article className="panel">
+        <div className="empty-state">
+          <div className="empty-state-icon" aria-hidden="true">
+            !
+          </div>
+          <h3>Incident history unavailable</h3>
+          <p className="table-error">{error}</p>
+        </div>
+      </article>
+    );
   }
 
   if (incidents.length === 0) {
-    return <p className="table-message">No incidents found yet.</p>;
+    return (
+      <article className="panel">
+        <div className="empty-state">
+          <div className="empty-state-icon" aria-hidden="true">
+            *
+          </div>
+          <h3>No incidents found</h3>
+          <p>
+            Analyze logs or create a test incident to populate the incident
+            history view.
+          </p>
+        </div>
+      </article>
+    );
   }
 
   return (
     <div className="incident-history-layout">
-      <div className="table-wrapper">
+      <div className="table-wrapper table-card">
         {updateError ? (
           <p className="table-message table-error">{updateError}</p>
         ) : null}
@@ -137,7 +184,11 @@ export default function IncidentTable({ refreshKey }) {
                   </span>
                 </td>
                 <td>{incident.incident_type}</td>
-                <td>{incident.status}</td>
+                <td>
+                  <span className={statusClassName(incident.status)}>
+                    {incident.status}
+                  </span>
+                </td>
                 <td>{incident.priority_score ?? "N/A"}</td>
                 <td>{incident.requires_escalation ? "Yes" : "No"}</td>
                 <td>{formatDate(incident.created_at)}</td>
@@ -211,7 +262,11 @@ export default function IncidentTable({ refreshKey }) {
               </div>
               <div>
                 <dt>Status</dt>
-                <dd>{selectedIncident.status}</dd>
+                <dd>
+                  <span className={statusClassName(selectedIncident.status)}>
+                    {selectedIncident.status}
+                  </span>
+                </dd>
               </div>
               <div>
                 <dt>Priority Score</dt>
