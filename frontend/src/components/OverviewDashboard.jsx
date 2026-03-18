@@ -184,7 +184,6 @@ export default function OverviewDashboard({ refreshKey }) {
         <article className="panel">
           <div className="section-heading">
             <h2>Overview</h2>
-            <p>Loading current incident analytics from the backend.</p>
           </div>
           <div className="kpi-grid">
             {kpiCards.map((card) => (
@@ -231,10 +230,6 @@ export default function OverviewDashboard({ refreshKey }) {
       <article className="panel">
         <div className="section-heading">
           <h2>Overview</h2>
-          <p>
-            Monitor current incident volume, severity distribution, and
-            escalation needs across the AI Ops workflow.
-          </p>
         </div>
 
         <div className="kpi-grid">
@@ -256,7 +251,6 @@ export default function OverviewDashboard({ refreshKey }) {
       <section className="overview-grid">
         <article className="panel">
           <h3>Severity Distribution</h3>
-          <p>Current incident mix by severity level.</p>
 
           {severityData.length > 0 ? (
             <>
@@ -306,7 +300,6 @@ export default function OverviewDashboard({ refreshKey }) {
 
         <article className="panel">
           <h3>Incident Trend</h3>
-          <p>Recent incident creation trend based on stored timestamps.</p>
 
           {trendData.length > 0 ? (
             <div className="chart-container">
@@ -337,7 +330,6 @@ export default function OverviewDashboard({ refreshKey }) {
 
       <article className="panel">
         <h3>Live Incident Feed</h3>
-        <p>The five most recent incidents saved by the backend analysis flow.</p>
 
         <div className="feed-list">
           {recentIncidents.map((incident) => (

@@ -28,10 +28,6 @@ export default function App() {
       return (
         <article className="panel">
           <h2>Analyze Logs</h2>
-          <p>
-            Paste application logs and send them to the backend for incident
-            analysis and automation metadata generation.
-          </p>
           <LogAnalyzer onAnalysisComplete={handleAnalysisComplete} />
         </article>
       );
@@ -41,10 +37,6 @@ export default function App() {
       return (
         <article className="panel">
           <h2>Incident History</h2>
-          <p>
-            Review incidents created by the analysis pipeline and update their
-            lifecycle status from the dashboard.
-          </p>
           <IncidentTable refreshKey={incidentRefreshKey} />
         </article>
       );
@@ -54,18 +46,10 @@ export default function App() {
       <section className="content-stack">
         <article className="panel">
           <h2>Validation</h2>
-          <p>
-            Use the backend validation script to compare expected mock incident
-            outputs against actual API results.
-          </p>
         </article>
 
         <article className="panel panel-muted">
           <h3>Next Step</h3>
-          <p>
-            This section can later show validation metrics, pass rates, and
-            sample-case summaries from the analysis pipeline.
-          </p>
         </article>
       </section>
     );
@@ -77,9 +61,6 @@ export default function App() {
         <div className="sidebar-brand">
           <p className="sidebar-kicker">AI Ops</p>
           <h1>Automation System</h1>
-          <p className="sidebar-subtitle">
-            Intelligent incident analysis and automation dashboard
-          </p>
         </div>
 
         <nav className="sidebar-nav" aria-label="Dashboard navigation">
@@ -101,7 +82,6 @@ export default function App() {
       <main className="main-content">
         <header className="content-header">
           <h2>{navItems.find((item) => item.id === activePage)?.label}</h2>
-          <p>Use the sidebar to switch between core AI Ops workflows.</p>
         </header>
 
         {renderPageContent()}
