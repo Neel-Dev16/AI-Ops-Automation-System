@@ -11,6 +11,7 @@ export default function LogAnalyzer({ onAnalysisComplete }) {
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [uploadedFileName, setUploadedFileName] = useState("");
 
   async function handleAnalyze(event) {
     event.preventDefault();
@@ -40,14 +41,64 @@ export default function LogAnalyzer({ onAnalysisComplete }) {
   function handleUseSampleLog() {
     setRawLogs(SAMPLE_LOG);
     setError("");
+    setUploadedFileName("");
+  }
+
+  function handleFileUpload(event) {
+    const selectedFile = event.target.files?.[0];
+
+    if (!selectedFile) {
+      return;
+    }
+
+    const fileName = selectedFile.name.toLowerCase();
+    const hasSupportedExtension =
+      fileName.endsWith(".log") || fileName.endsWith(".txt");
+
+    if (!hasSupportedExtension) {
+      setError("Only .log and .txt files are supported.");
+      setUploadedFileName("");
+      event.target.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      if (typeof reader.result !== "string") {
+        setError("The selected file could not be read.");
+        setUploadedFileName("");
+        return;
+      }
+
+      setRawLogs(reader.result);
+      setUploadedFileName(selectedFile.name);
+      setError("");
+    };
+
+    reader.onerror = () => {
+      setError("The selected file could not be read.");
+      setUploadedFileName("");
+    };
+
+    reader.readAsText(selectedFile);
   }
 
   return (
     <div className="log-analyzer">
       <form className="log-form" onSubmit={handleAnalyze}>
-        <label className="log-label" htmlFor="raw-logs">
-          Raw Logs
-        </label>
+        <div className="log-header">
+          <label className="log-label" htmlFor="raw-logs">
+            Raw Logs
+          </label>
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={handleUseSampleLog}
+          >
+            Use Sample Log
+          </button>
+        </div>
         <textarea
           id="raw-logs"
           className="log-textarea"
@@ -58,13 +109,21 @@ export default function LogAnalyzer({ onAnalysisComplete }) {
         />
 
         <div className="log-actions">
-          <button
-            type="button"
-            className="secondary-button"
-            onClick={handleUseSampleLog}
-          >
-            Use Sample Log
-          </button>
+          <div className="upload-group">
+            <label className="upload-button" htmlFor="log-file-upload">
+              Upload Log File
+            </label>
+            <input
+              id="log-file-upload"
+              type="file"
+              className="file-input"
+              accept=".log,.txt"
+              onChange={handleFileUpload}
+            />
+            {uploadedFileName ? (
+              <span className="upload-file-name">{uploadedFileName}</span>
+            ) : null}
+          </div>
           <button type="submit" className="primary-button" disabled={loading}>
             {loading ? "Analyzing..." : "Analyze Logs"}
           </button>
