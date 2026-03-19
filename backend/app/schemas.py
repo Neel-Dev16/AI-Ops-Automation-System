@@ -58,3 +58,41 @@ class IncidentResponse(BaseModel):
     model_config = {
         "from_attributes": True,
     }
+
+
+class ServiceResponse(BaseModel):
+    id: int
+    name: str
+    environment: str
+    created_at: datetime
+
+    model_config = {
+        "from_attributes": True,
+    }
+
+
+class RawLogCreate(BaseModel):
+    service_name: str
+    environment: str = "development"
+    level: str
+    message: str
+    raw_payload: str | None = None
+    source: str | None = None
+
+
+class RawLogResponse(BaseModel):
+    id: int
+    service_name: str
+    environment: str
+    level: str
+    message: str
+    raw_payload: str | None = None
+    source: str | None = None
+    processed: bool
+    triage_decision: str | None = None
+    risk_score: int | None = None
+    created_at: datetime
+
+    model_config = {
+        "from_attributes": True,
+    }
