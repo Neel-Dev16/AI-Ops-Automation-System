@@ -12,6 +12,7 @@ from app.schemas import (
 )
 from app.services.automation_service import apply_automation_rules
 from app.services.llm_service import analyze_logs_with_llm
+from app.services.triage_service import triage_log
 
 router = APIRouter()
 
@@ -39,8 +40,13 @@ def list_logs() -> dict[str, str]:
 @router.post("/ingest", response_model=RawLogResponse, status_code=201)
 def ingest_log(payload: RawLogCreate, db: Session = Depends(get_db)) -> RawLog:
     get_or_create_service(db, payload.service_name, payload.environment)
+    triage_result = triage_log(payload.level, payload.message, payload.environment)
 
-    raw_log = RawLog(**payload.model_dump())
+    raw_log = RawLog(
+        **payload.model_dump(),
+        triage_decision=triage_result["triage_decision"],
+        risk_score=triage_result["risk_score"],
+    )
     db.add(raw_log)
     db.commit()
     db.refresh(raw_log)
@@ -55,7 +61,12 @@ def ingest_logs_batch(
 
     for item in payload:
         get_or_create_service(db, item.service_name, item.environment)
-        raw_log = RawLog(**item.model_dump())
+        triage_result = triage_log(item.level, item.message, item.environment)
+        raw_log = RawLog(
+            **item.model_dump(),
+            triage_decision=triage_result["triage_decision"],
+            risk_score=triage_result["risk_score"],
+        )
         db.add(raw_log)
         raw_logs.append(raw_log)
 
