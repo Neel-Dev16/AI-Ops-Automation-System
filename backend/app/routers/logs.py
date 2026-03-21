@@ -12,6 +12,7 @@ from app.schemas import (
 )
 from app.services.automation_service import apply_automation_rules
 from app.services.llm_service import analyze_logs_with_llm
+from app.services.redaction_service import redact_sensitive_data
 from app.services.triage_service import triage_log
 
 router = APIRouter()
@@ -102,7 +103,8 @@ def list_raw_logs(
 
 @router.post("/analyze", response_model=IncidentResponse, status_code=201)
 def analyze_logs(payload: LogAnalysisRequest, db: Session = Depends(get_db)) -> Incident:
-    analysis = analyze_logs_with_llm(payload.raw_logs)
+    redacted_logs = redact_sensitive_data(payload.raw_logs)
+    analysis = analyze_logs_with_llm(redacted_logs)
     automation_metadata = apply_automation_rules(analysis)
     analysis_data = analysis.model_dump()
 
