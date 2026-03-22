@@ -27,6 +27,7 @@ class RawLog(Base):
     processed = Column(Boolean, nullable=False, default=False)
     triage_decision = Column(String, nullable=True)
     risk_score = Column(Integer, nullable=True)
+    fingerprint = Column(String, index=True, nullable=True)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
 
 
@@ -45,5 +46,9 @@ class Incident(Base):
     escalation_message = Column(Text, nullable=True)
     automation_action = Column(String, nullable=True)
     priority_score = Column(Integer, nullable=True)
+    fingerprint = Column(String, index=True, nullable=True)
+    occurrence_count = Column(Integer, nullable=False, default=1)
+    first_seen = Column(DateTime, nullable=True)
+    last_seen = Column(DateTime, nullable=True)
     status = Column(String, nullable=False, default="open")
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)

@@ -7,6 +7,10 @@ class IncidentCreate(BaseModel):
     service_name: str
     severity: str
     incident_type: str
+    fingerprint: str | None = None
+    occurrence_count: int = 1
+    first_seen: datetime | None = None
+    last_seen: datetime | None = None
     raw_logs: str | None = None
     summary: str
     root_cause: str
@@ -44,6 +48,10 @@ class IncidentResponse(BaseModel):
     service_name: str
     severity: str
     incident_type: str
+    fingerprint: str | None = None
+    occurrence_count: int = 1
+    first_seen: datetime | None = None
+    last_seen: datetime | None = None
     raw_logs: str | None = None
     summary: str
     root_cause: str
@@ -91,6 +99,7 @@ class RawLogResponse(BaseModel):
     processed: bool
     triage_decision: str | None = None
     risk_score: int | None = None
+    fingerprint: str | None = None
     created_at: datetime
 
     model_config = {
