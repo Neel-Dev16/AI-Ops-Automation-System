@@ -33,6 +33,27 @@ def get_or_create_service(db: Session, service_name: str, environment: str) -> S
     return service
 
 
+def create_incident_from_logs(raw_logs: str, db: Session) -> Incident:
+    redacted_logs = redact_sensitive_data(raw_logs)
+    analysis = analyze_logs_with_llm(redacted_logs)
+    automation_metadata = apply_automation_rules(analysis)
+    analysis_data = analysis.model_dump()
+
+    for key in ("escalation_message", "automation_action", "priority_score"):
+        analysis_data.pop(key, None)
+
+    incident_data = IncidentCreate(
+        **analysis_data,
+        raw_logs=raw_logs,
+        **automation_metadata,
+    )
+
+    incident = Incident(**incident_data.model_dump())
+    db.add(incident)
+    db.flush()
+    return incident
+
+
 @router.get("/")
 def list_logs() -> dict[str, str]:
     return {"message": "Logs endpoint placeholder."}
@@ -49,6 +70,11 @@ def ingest_log(payload: RawLogCreate, db: Session = Depends(get_db)) -> RawLog:
         risk_score=triage_result["risk_score"],
     )
     db.add(raw_log)
+
+    if triage_result["triage_decision"] == "analyze":
+        create_incident_from_logs(payload.message, db)
+        raw_log.processed = True
+
     db.commit()
     db.refresh(raw_log)
     return raw_log
@@ -69,6 +95,11 @@ def ingest_logs_batch(
             risk_score=triage_result["risk_score"],
         )
         db.add(raw_log)
+
+        if triage_result["triage_decision"] == "analyze":
+            create_incident_from_logs(item.message, db)
+            raw_log.processed = True
+
         raw_logs.append(raw_log)
 
     db.commit()
@@ -103,22 +134,7 @@ def list_raw_logs(
 
 @router.post("/analyze", response_model=IncidentResponse, status_code=201)
 def analyze_logs(payload: LogAnalysisRequest, db: Session = Depends(get_db)) -> Incident:
-    redacted_logs = redact_sensitive_data(payload.raw_logs)
-    analysis = analyze_logs_with_llm(redacted_logs)
-    automation_metadata = apply_automation_rules(analysis)
-    analysis_data = analysis.model_dump()
-
-    for key in ("escalation_message", "automation_action", "priority_score"):
-        analysis_data.pop(key, None)
-
-    incident_data = IncidentCreate(
-        **analysis_data,
-        raw_logs=payload.raw_logs,
-        **automation_metadata,
-    )
-
-    incident = Incident(**incident_data.model_dump())
-    db.add(incident)
+    incident = create_incident_from_logs(payload.raw_logs, db)
     db.commit()
     db.refresh(incident)
     return incident
