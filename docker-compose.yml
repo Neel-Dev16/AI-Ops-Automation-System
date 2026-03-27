@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   backend:
     build: ./backend
@@ -17,5 +15,19 @@ services:
       - "5173:5173"
     environment:
       VITE_API_BASE_URL: http://127.0.0.1:8000
+    depends_on:
+      - backend
+
+  log-producer:
+    profiles:
+      - producer
+    image: python:3.11-slim
+    container_name: aiops-log-producer
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: sh -c "pip install requests && python scripts/log_producer.py"
+    environment:
+      AIOPS_API_URL: http://backend:8000/api/logs/ingest
     depends_on:
       - backend

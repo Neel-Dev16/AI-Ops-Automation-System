@@ -53,6 +53,23 @@ From the project root:
 docker compose up --build
 ```
 
+This starts:
+
+- backend
+- frontend
+
+To include the simulated log producer:
+
+```bash
+docker compose --profile producer up --build
+```
+
+This starts:
+
+- backend
+- frontend
+- log-producer
+
 URLs:
 
 - Frontend: [http://localhost:5173](http://localhost:5173)
